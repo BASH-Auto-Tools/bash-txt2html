@@ -1,0 +1,28 @@
+#!/bin/bash
+# SamuraiDesigner v0.2
+# plain text to html converter
+# Author: Kurashov Artem
+# License: GNU GPLv3
+LCHSET=`echo $LANG|sed 's/^.*\.//'`
+LCHSETTST=`iconv -l | grep $LCHSET//`
+if [ "$LCHSETTST" == "" ]; then
+LCHSET="iso-8859-1"
+fi
+cp $1 $1.html
+sed -i 's/\&/\&amp;/g' $1.html
+sed -i 's/</\&lt;/g' $1.html
+sed -i 's/>/\&gt;/g' $1.html
+sed -i '1s/^/\n/' $1.html
+sed -i '1c<html>' $1.html
+sed -i '1a<head>' $1.html
+sed -i "2a<title>`head -n 1 $1`<\/title>" $1.html
+sed -i '3a<meta name="Generator" content="SamuraiDesigner v0.2 by Kurashov A.K.">' $1.html
+sed -i "4a<meta http-equiv=\"content-type\" content=\"text\/html; charset=$LCHSET\">" $1.html
+sed -i '5a<\/head>' $1.html
+sed -i '6a<body bgcolor="#ffffff" text="#000000">' $1.html
+sed -i '7a<p>' $1.html
+sed -i '$a<\/p>' $1.html
+sed -i '$a<\/body>' $1.html
+sed -i '$a<\/html>' $1.html
+sed -i 's/^$/<\/p><p>/g' $1.html
+rm $1
